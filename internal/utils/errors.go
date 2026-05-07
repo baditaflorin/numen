@@ -1,3 +1,4 @@
+// Package utils contains small command helpers shared by local generators.
 package utils
 
 import (
@@ -6,6 +7,7 @@ import (
 	"os"
 )
 
+// HandleErrorOrLogWithMessages logs a command error or success message and exits on failure.
 func HandleErrorOrLogWithMessages(err error, errMsg, successMsg string) {
 	if err != nil {
 		slog.Error(errMsg, "error", err)

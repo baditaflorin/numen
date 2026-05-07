@@ -1,3 +1,4 @@
+// Package catalog validates and writes static literature cache artifacts.
 package catalog
 
 import (
@@ -14,10 +15,12 @@ import (
 	"time"
 )
 
+// SchemaVersion is the version of the static frontend data contract.
 const SchemaVersion = "1.0.0"
 
+// LoadPapers reads seed paper records and returns their input checksum.
 func LoadPapers(path string) ([]Paper, string, error) {
-	bytes, err := os.ReadFile(path)
+	bytes, err := os.ReadFile(path) // #nosec G304 -- local generator intentionally reads caller-provided seed path.
 	if err != nil {
 		return nil, "", fmt.Errorf("read papers: %w", err)
 	}
@@ -29,6 +32,7 @@ func LoadPapers(path string) ([]Paper, string, error) {
 	return papers, hex.EncodeToString(sum[:]), nil
 }
 
+// ValidatePapers checks minimum frontend contract requirements.
 func ValidatePapers(papers []Paper) error {
 	if len(papers) == 0 {
 		return errors.New("paper catalog is empty")
@@ -52,6 +56,7 @@ func ValidatePapers(papers []Paper) error {
 	return nil
 }
 
+// SortPapers orders papers deterministically for stable artifacts.
 func SortPapers(papers []Paper) {
 	sort.SliceStable(papers, func(i, j int) bool {
 		if papers[i].Year == papers[j].Year {
@@ -61,6 +66,7 @@ func SortPapers(papers []Paper) {
 	})
 }
 
+// WriteArtifacts writes paper and metadata artifacts atomically.
 func WriteArtifacts(papers []Paper, checksum, output, metaOutput, artifactVersion string) (BuildSummary, error) {
 	SortPapers(papers)
 	meta := Metadata{
@@ -87,11 +93,11 @@ func WriteArtifacts(papers []Paper, checksum, output, metaOutput, artifactVersio
 }
 
 func writeJSON(path string, value any) error {
-	if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
+	if err := os.MkdirAll(filepath.Dir(path), 0o750); err != nil {
 		return fmt.Errorf("create artifact directory: %w", err)
 	}
 	temp := path + ".tmp"
-	file, err := os.Create(temp)
+	file, err := os.Create(temp) // #nosec G304 -- local generator intentionally writes caller-provided artifact path.
 	if err != nil {
 		return fmt.Errorf("create temp artifact: %w", err)
 	}

@@ -35,7 +35,7 @@ lint: ## Run all linters
 	@npm run lint
 	@npm run typecheck
 	@go vet $(GO_PACKAGES)
-	@if command -v golangci-lint >/dev/null 2>&1; then golangci-lint run; else echo "golangci-lint not installed; skipping"; fi
+	@if command -v golangci-lint >/dev/null 2>&1; then golangci-lint run $(GO_PACKAGES); else echo "golangci-lint not installed; skipping"; fi
 
 fmt: ## Format code
 	@npm run fmt

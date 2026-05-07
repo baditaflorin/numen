@@ -9,7 +9,7 @@ test ! -s /tmp/numen-gofmt.txt
 go vet ./cmd/... ./internal/...
 
 if command -v golangci-lint >/dev/null 2>&1; then
-  golangci-lint run
+  golangci-lint run ./cmd/... ./internal/...
 else
   echo "golangci-lint not installed; skipping optional local lint" >&2
 fi

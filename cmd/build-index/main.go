@@ -1,3 +1,4 @@
+// Package main builds static Numen literature cache artifacts.
 package main
 
 import (

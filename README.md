@@ -1,12 +1,18 @@
 # Numen
 
-Live site: https://baditaflorin.github.io/numen/
+![Live Pages](https://img.shields.io/badge/live-GitHub%20Pages-006d77)
+![Version](https://img.shields.io/badge/version-v0.1.0-a15c00)
+![Mode](https://img.shields.io/badge/mode-B%20static%20data-4d7c0f)
+
+Live GitHub Pages URL: https://baditaflorin.github.io/numen/
 
 Repository: https://github.com/baditaflorin/numen
 
 Support development: https://www.paypal.com/paypalme/florinbadita
 
 Numen is a static-first academic writing platform for drafting, citations, literature review, figures, and submission-ready PDFs.
+
+![Numen demo](https://baditaflorin.github.io/numen/demo.png)
 
 ## Quickstart
 
@@ -33,11 +39,11 @@ flowchart LR
 
 ## Documentation
 
-- Architecture: docs/architecture.md
-- Data contract: docs/data.md
-- Deployment: docs/deploy.md
-- ADRs: docs/adr/
-- Postmortem: docs/postmortem.md
+- Architecture: https://github.com/baditaflorin/numen/blob/main/docs/architecture.md
+- Data contract: https://github.com/baditaflorin/numen/blob/main/docs/data.md
+- Deployment: https://github.com/baditaflorin/numen/blob/main/docs/deploy.md
+- ADRs: https://github.com/baditaflorin/numen/tree/main/docs/adr
+- Postmortem: https://github.com/baditaflorin/numen/blob/main/docs/postmortem.md
 
 ## Local Hooks
 

@@ -1,5 +1,4 @@
 import react from "@vitejs/plugin-react";
-import { execSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { defineConfig } from "vite";
@@ -9,22 +8,24 @@ const pkg = JSON.parse(
 ) as {
   version: string;
 };
-
-function gitCommit(): string {
-  try {
-    return execSync("git rev-parse --short HEAD", { encoding: "utf8" }).trim();
-  } catch {
-    return "unknown";
-  }
-}
+const buildMeta = JSON.parse(
+  readFileSync(resolve(__dirname, "build-meta.json"), "utf8"),
+) as {
+  commit: string;
+  builtAt: string;
+};
 
 export default defineConfig({
   base: "/numen/",
   plugins: [react()],
   define: {
     __APP_VERSION__: JSON.stringify(pkg.version),
-    __GIT_COMMIT__: JSON.stringify(gitCommit()),
-    __BUILD_TIME__: JSON.stringify(new Date().toISOString()),
+    __GIT_COMMIT__: JSON.stringify(
+      process.env.NUMEN_BUILD_COMMIT ?? buildMeta.commit,
+    ),
+    __BUILD_TIME__: JSON.stringify(
+      process.env.NUMEN_BUILD_TIME ?? buildMeta.builtAt,
+    ),
   },
   build: {
     outDir: "docs",

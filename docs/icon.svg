@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" aria-label="Numen">
+  <rect width="96" height="96" rx="20" fill="#fbfcf7"/>
+  <path d="M20 24h34c12 0 22 10 22 22v26H60V47c0-5-4-9-9-9H36v34H20V24Z" fill="#006d77"/>
+  <path d="M41 24h18c10 0 18 8 18 18v6H61v-5c0-4-3-7-7-7H41V24Z" fill="#d95d39"/>
+  <circle cx="66" cy="69" r="7" fill="#a15c00"/>
+</svg>

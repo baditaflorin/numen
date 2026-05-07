@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+npm run fmt:check
+npm run lint
+npm run typecheck
+gofmt -l cmd internal | tee /tmp/numen-gofmt.txt
+test ! -s /tmp/numen-gofmt.txt
+go vet ./cmd/... ./internal/...
+
+if command -v golangci-lint >/dev/null 2>&1; then
+  golangci-lint run
+else
+  echo "golangci-lint not installed; skipping optional local lint" >&2
+fi
+
+if command -v gitleaks >/dev/null 2>&1; then
+  gitleaks protect --staged --redact
+else
+  git diff --cached --name-only -z | xargs -0 grep -nE "(AKIA[0-9A-Z]{16}|BEGIN (RSA|OPENSSH|EC|DSA) PRIVATE KEY|ghp_[A-Za-z0-9_]{30,})" && {
+    echo "possible secret found" >&2
+    exit 1
+  }
+fi

@@ -1,0 +1,63 @@
+{
+  "name": "numen",
+  "version": "0.1.0",
+  "private": false,
+  "type": "module",
+  "description": "Static-first academic writing platform for drafting, citations, literature review, figures, and submission-ready PDFs.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/baditaflorin/numen.git"
+  },
+  "homepage": "https://baditaflorin.github.io/numen/",
+  "scripts": {
+    "clean:pages-assets": "rm -rf docs/assets docs/index.html docs/404.html docs/icon.svg docs/manifest.webmanifest docs/sw.js",
+    "dev": "vite --host 0.0.0.0",
+    "build": "npm run clean:pages-assets && tsc -b && vite build && node scripts/prepare-pages.mjs",
+    "preview": "vite preview --host 0.0.0.0 --port 4173",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc -b --pretty false",
+    "lint": "eslint .",
+    "fmt": "prettier --write .",
+    "fmt:check": "prettier --check .",
+    "smoke": "playwright test"
+  },
+  "dependencies": {
+    "@citation-js/core": "^0.7.21",
+    "@citation-js/plugin-bibtex": "^0.7.21",
+    "@duckdb/duckdb-wasm": "^1.33.1-dev45.0",
+    "@tanstack/react-query": "^5.90.7",
+    "cytoscape": "^3.33.3",
+    "idb": "^8.0.3",
+    "jszip": "^3.10.1",
+    "lucide-react": "^0.468.0",
+    "mermaid": "^11.14.0",
+    "pdf-lib": "^1.17.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.38.0",
+    "@playwright/test": "^1.56.1",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.0",
+    "@types/node": "^22.19.0",
+    "@types/react": "^18.3.26",
+    "@types/react-dom": "^18.3.7",
+    "@vitejs/plugin-react": "^4.7.0",
+    "autoprefixer": "^10.4.21",
+    "eslint": "^9.38.0",
+    "globals": "^15.15.0",
+    "http-server": "^14.1.1",
+    "jsdom": "^25.0.1",
+    "postcss": "^8.5.6",
+    "prettier": "^3.6.2",
+    "tailwindcss": "^3.4.18",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.46.3",
+    "vite": "^6.4.1",
+    "vitest": "^2.1.9"
+  }
+}

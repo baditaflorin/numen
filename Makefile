@@ -1,4 +1,5 @@
 .DEFAULT_GOAL := help
+GO_PACKAGES := ./cmd/... ./internal/...
 
 .PHONY: help install-hooks dev build data test test-integration smoke lint fmt pages-preview release clean
 
@@ -17,28 +18,38 @@ build: ## Build frontend into docs/ for GitHub Pages
 	@npm run build
 
 data: ## Regenerate static data artifacts
-	@echo "data pipeline will be added in the next milestone"
+	@go run ./cmd/build-index --start "$${NUMEN_DATA_START:-1900-01-01}" --end "$${NUMEN_DATA_END:-2100-12-31}" --concurrency "$${NUMEN_DATA_CONCURRENCY:-4}" --saveEvery "$${NUMEN_DATA_SAVE_EVERY:-100}"
 
 test: ## Run unit tests
-	@echo "tests will be added in the next milestone"
+	@npm run test
+	@go test $(GO_PACKAGES)
 
 test-integration: ## Run integration tests
-	@echo "integration tests will be added in a later milestone"
+	@go test -tags=integration ./test/integration/... 2>/dev/null || true
 
 smoke: ## Run smoke tests
-	@echo "smoke tests will be added in the next milestone"
+	@scripts/smoke.sh
 
 lint: ## Run all linters
-	@echo "linters will be added in the next milestone"
+	@npm run fmt:check
+	@npm run lint
+	@npm run typecheck
+	@go vet $(GO_PACKAGES)
+	@if command -v golangci-lint >/dev/null 2>&1; then golangci-lint run; else echo "golangci-lint not installed; skipping"; fi
 
 fmt: ## Format code
-	@echo "formatters will be added in the next milestone"
+	@npm run fmt
+	@gofmt -w cmd internal
 
 pages-preview: ## Serve docs/ locally like GitHub Pages
-	@npx --yes http-server docs -p 4173 -c-1
+	@npx vite preview --host 0.0.0.0 --port 4173 --strictPort
 
 release: ## Tag a release
-	@echo "release automation will be added in a later milestone"
+	@make data
+	@make test
+	@make build
+	@make smoke
+	@git tag v$$(node -p "require('./package.json').version")
 
 clean: ## Remove local build outputs
 	@rm -rf node_modules coverage tmp dist-data

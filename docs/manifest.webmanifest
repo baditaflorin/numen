@@ -1,0 +1,18 @@
+{
+  "name": "Numen",
+  "short_name": "Numen",
+  "description": "Static-first academic writing and research platform.",
+  "start_url": "/numen/",
+  "scope": "/numen/",
+  "display": "standalone",
+  "background_color": "#fbfcf7",
+  "theme_color": "#f7f8f2",
+  "icons": [
+    {
+      "src": "/numen/icon.svg",
+      "sizes": "96x96",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

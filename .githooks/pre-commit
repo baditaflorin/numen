@@ -17,8 +17,11 @@ fi
 if command -v gitleaks >/dev/null 2>&1; then
   gitleaks protect --staged --redact
 else
-  git diff --cached --name-only -z | xargs -0 grep -nE "(AKIA[0-9A-Z]{16}|BEGIN (RSA|OPENSSH|EC|DSA) PRIVATE KEY|ghp_[A-Za-z0-9_]{30,})" && {
-    echo "possible secret found" >&2
-    exit 1
-  }
+  mapfile -t staged_files < <(git diff --cached --name-only --diff-filter=ACM)
+  if [[ ${#staged_files[@]} -gt 0 ]]; then
+    grep -nE "(AKIA[0-9A-Z]{16}|BEGIN (RSA|OPENSSH|EC|DSA) PRIVATE KEY|ghp_[A-Za-z0-9_]{30,})" "${staged_files[@]}" && {
+      echo "possible secret found" >&2
+      exit 1
+    }
+  fi
 fi

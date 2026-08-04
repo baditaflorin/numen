@@ -239,10 +239,28 @@ function titleCase(value: string): string {
   return value.charAt(0).toUpperCase() + value.slice(1);
 }
 
+// Every character LaTeX treats specially in ordinary text mode, mapped to
+// its escaped form. Previously only \, _, &, % were handled, so common
+// academic text — "O(n^2)", "dataset #1", "cost $5", "cache~invalidation",
+// or a brace group copy-pasted from another paper — silently produced a
+// .tex file that fails to compile, undermining the "submission-ready"
+// LaTeX export this app advertises.
+const LATEX_ESCAPES: Record<string, string> = {
+  "\\": "\\textbackslash{}",
+  "{": "\\{",
+  "}": "\\}",
+  _: "\\_",
+  "&": "\\&",
+  "%": "\\%",
+  $: "\\$",
+  "#": "\\#",
+  "~": "\\textasciitilde{}",
+  "^": "\\textasciicircum{}",
+};
+
+// A single-pass regex replace (rather than chained .replaceAll calls) so the
+// backslashes introduced by one substitution — e.g. the `{}` in
+// `\textbackslash{}` — are never re-scanned and escaped a second time.
 function escapeLatex(value: string): string {
-  return value
-    .replaceAll("\\", "\\textbackslash{}")
-    .replaceAll("_", "\\_")
-    .replaceAll("&", "\\&")
-    .replaceAll("%", "\\%");
+  return value.replace(/[\\{}_&%$#~^]/g, (char) => LATEX_ESCAPES[char]);
 }

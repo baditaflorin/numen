@@ -21,6 +21,31 @@ describe("exporters", () => {
     expect(latex).toContain("A\\&B\\_Study");
   });
 
+  it("escapes every LaTeX-special character, not just \\, _, &, %", () => {
+    // Regression test: an earlier version of escapeLatex only handled
+    // \, _, &, % and left $ # { } ~ ^ unescaped, so ordinary academic
+    // phrasing ("O(n^2)", "dataset #1", "cost $5", "cache~invalidation")
+    // produced a .tex file that fails to compile.
+    const project = createDefaultProject();
+    project.title = "O(n^2) costs $5 for dataset #1 {v2} cache~ok";
+    const latex = buildLatex(project);
+    expect(latex).toContain(
+      "O(n\\textasciicircum{}2) costs \\$5 for dataset \\#1 \\{v2\\} cache\\textasciitilde{}ok",
+    );
+  });
+
+  it("does not double-escape the braces introduced by the backslash substitution", () => {
+    // Regression test: a naive chain of .replaceAll calls that escapes "\"
+    // to "\textbackslash{}" and THEN escapes "{" / "}" will re-match the
+    // braces it just inserted, corrupting the command into
+    // "\textbackslash\{\}". A single-pass replace must avoid this.
+    const project = createDefaultProject();
+    project.title = "back\\slash";
+    const latex = buildLatex(project);
+    expect(latex).toContain("back\\textbackslash{}slash");
+    expect(latex).not.toContain("\\textbackslash\\{\\}");
+  });
+
   it("produces a valid PDF blob for the default project", async () => {
     const bytes = await buildPdfDraftBytes(createDefaultProject());
     expect(bytes.byteLength).toBeGreaterThan(1500);
